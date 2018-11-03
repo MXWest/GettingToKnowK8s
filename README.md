@@ -10,7 +10,7 @@ that, you can follow the [Hello minikube tutorial](#hello-minikube-tutorial) sec
 kubernetes cluster.
 
 We assume that you're running on macOS, and that you have already installed
-VirtualBox (`minikube` runs kubernetes components in a VM).
+[VirtualBox](http://www.virtualbox.org) (`minikube` runs kubernetes components in a VM).
 
 
 ## Getting Started with [`k8s`](https://kubernetes.io/) and [`minikube`](https://github.com/kubernetes/minikube#minikube)
