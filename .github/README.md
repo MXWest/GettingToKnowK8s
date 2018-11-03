@@ -133,3 +133,11 @@ To unset the environment: `eval $(minikube docker-env -u)`
 
 This will open a browser window to your app. Open your `minikube dashboard` to
 have a look around!
+
+## Resources
+* [Kubernetes 101](https://kubernetes.io/docs/tutorials/k8s101/)
+* [Kubernetes 201](https://kubernetes.io/docs/tutorials/k8s201/)
+
+### Playgrounds
+* [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
+* [Play with Kubernetes](https://labs.play-with-k8s.com/)
