@@ -19,27 +19,60 @@ Let's get you up and running.
 
 ### 1. Install `minikube`
 
-`brew cask install minikube`
+`brew install minikube`
 
 ### 2. Install `kubectl`
 
 If you're a GCP user, you may wish to install using the Google Cloud SDK: `gcloud components install kubectl`
 
-If you're not, you can use homebrew: `brew cask install kubectl`
+If you're not, you can use homebrew: `brew install kubectl`
 
 ### 3. Start `minikube`
 
-`minikube start`
+`minikube start --driver=virtualbox`
 
-This will take a little time as it spins up the VM. You should
-expect to see output that looks something like this:
+This will take a little time as it spins up the VM.  Expect to see output that looks something like this:
 
 ```
-Starting local Kubernetes v1.10.0 cluster...
-Starting VM...
-Getting VM IP address...
+😄  minikube v1.18.1 on Darwin 10.15.7
+✨  Using the virtualbox driver based on user configuration
+💿  Downloading VM boot image ...
+    > minikube-v1.18.0.iso.sha256: 65 B / 65 B [-------------] 100.00% ? p/s 0s
+    > minikube-v1.18.0.iso: 212.99 MiB / 212.99 MiB [] 100.00% 8.68 MiB p/s 24s
+👍  Starting control plane node minikube in cluster minikube
+💾  Downloading Kubernetes v1.20.2 preload ...
+    > preloaded-images-k8s-v9-v1....: 491.22 MiB / 491.22 MiB  100.00% 8.51 MiB
+🔥  Creating virtualbox VM (CPUs=2, Memory=6000MB, Disk=20000MB) ...
+🐳  Preparing Kubernetes v1.20.2 on Docker 20.10.3 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v4
+🌟  Enabled addons: storage-provisioner, default-storageclass
+
+❗  /Users/westm1/Google/google-cloud-sdk/bin/kubectl is version 1.17.17-dispatcher, which may have incompatibilites with Kubernetes 1.20.2.
+    ▪ Want kubectl v1.20.2? Try 'minikube kubectl -- get pods -A'
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
 ```
 
+#### In case of trouble
+If you have trouble starting minikube in this fashion (e.g. `⛔  Exiting due to RSRC_INSUFFICIENT_REQ_MEMORY`), try purging any pre-existing configs
+and re-try the start command.
+
+`minikube delete --all --purge`
+
+```
+🔥  Deleting "minikube" in virtualbox ...
+💀  Removed all traces of the "minikube" cluster.
+🔥  Successfully deleted all profiles
+💀  Successfully purged minikube directory located at - [/Users/xxx/.minikube]
+```
+
+Now, try to start again.
+
+#### Post Startup
 After it's finished its startup, check status:
 
 `minikube status`
@@ -47,10 +80,13 @@ After it's finished its startup, check status:
 
 You should see something like this:
 ```
-minikube status
-minikube: Running
-cluster: Running
-kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+timeToStop: Nonexistent
 ```
 
 ### 4. Set `kubectl` context
@@ -63,13 +99,29 @@ After which you can verify:
 
 You should see something like this:
 ```
-Kubernetes master is running at https://192.168.99.100:8443
-KubeDNS is running at https://192.168.99.100:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Kubernetes master is running at https://192.168.99.108:8443
+KubeDNS is running at https://192.168.99.108:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 ### 5. Open your `kubernetes` dashboard
 
 `minikube dashboard`
+
+You'll see something like this:
+
+```
+🔌  Enabling dashboard ...
+    ▪ Using image kubernetesui/dashboard:v2.1.0
+    ▪ Using image kubernetesui/metrics-scraper:v1.0.4
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:58673/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+```
+
+And voila! Your browser will open that URL.
 
 
 # Hello minikube tutorial
@@ -104,7 +156,7 @@ To unset the environment: `eval $(minikube docker-env -u)`
 
 **Create the Deployment**
 
-`kubectl run hello-node --image=hello-node:v1 --port=8080`
+`kubectl create deployment hello-node --image=hello-node:v1`
 
 **View the Deployment**
 
@@ -120,7 +172,7 @@ To unset the environment: `eval $(minikube docker-env -u)`
 > from outside the Kubernetes virtual network, you have to expose the
 > Pod as a Kubernetes [Service](https://kubernetes.io/docs/concepts/services-networking/service/).
 
-`kubectl expose deployment hello-node --type=LoadBalancer`
+`kubectl expose deployment hello-node --type=LoadBalancer --port 8080`
 
 ### 5. Expose your App
 > The `--type=LoadBalancer` flag indicates that you want to expose your
