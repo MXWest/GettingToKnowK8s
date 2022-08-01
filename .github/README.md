@@ -9,9 +9,10 @@ This `README` will walk you through getting `minikube` and `kubectl` installed. 
 that, you can follow the [Hello minikube tutorial](#hello-minikube-tutorial) section to deploy to your
 kubernetes cluster.
 
-We assume that you're running on macOS, and that you have already installed
-[VirtualBox](http://www.virtualbox.org) (`minikube` runs kubernetes components in a VM).
-
+We are running ...
+* macOS Monterey
+* on M1 Max chip.
+* with Docker Desktop 4.10.1
 
 ## Getting Started with [`k8s`](https://kubernetes.io/) and [`minikube`](https://github.com/kubernetes/minikube#minikube)
 
@@ -29,48 +30,34 @@ If you're not, you can use homebrew: `brew install kubectl`
 
 ### 3. Start `minikube`
 
-`minikube start --driver=virtualbox`
+`minikube start`
 
-This will take a little time as it spins up the VM.  Expect to see output that looks something like this:
-
+You'll see something like this:
 ```
-😄  minikube v1.18.1 on Darwin 10.15.7
-✨  Using the virtualbox driver based on user configuration
-💿  Downloading VM boot image ...
-    > minikube-v1.18.0.iso.sha256: 65 B / 65 B [-------------] 100.00% ? p/s 0s
-    > minikube-v1.18.0.iso: 212.99 MiB / 212.99 MiB [] 100.00% 8.68 MiB p/s 24s
+😄  minikube v1.26.0 on Darwin 12.5 (arm64)
+✨  Automatically selected the docker driver
+📌  Using Docker Desktop driver with root privileges
 👍  Starting control plane node minikube in cluster minikube
-💾  Downloading Kubernetes v1.20.2 preload ...
-    > preloaded-images-k8s-v9-v1....: 491.22 MiB / 491.22 MiB  100.00% 8.51 MiB
-🔥  Creating virtualbox VM (CPUs=2, Memory=6000MB, Disk=20000MB) ...
-🐳  Preparing Kubernetes v1.20.2 on Docker 20.10.3 ...
+🚜  Pulling base image ...
+💾  Downloading Kubernetes v1.24.1 preload ...
+    > preloaded-images-k8s-v18-v1...: 342.86 MiB / 342.86 MiB  100.00% 3.68 MiB
+    > gcr.io/k8s-minikube/kicbase: 347.17 MiB / 347.17 MiB  100.00% 2.94 MiB p/
+    > gcr.io/k8s-minikube/kicbase: 0 B [_________________________] ?% ? p/s 49s
+🔥  Creating docker container (CPUs=2, Memory=15939MB) ...
+🐳  Preparing Kubernetes v1.24.1 on Docker 20.10.17 ...
     ▪ Generating certificates and keys ...
     ▪ Booting up control plane ...
     ▪ Configuring RBAC rules ...
 🔎  Verifying Kubernetes components...
-    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v4
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
 🌟  Enabled addons: storage-provisioner, default-storageclass
-
-❗  /Users/westm1/Google/google-cloud-sdk/bin/kubectl is version 1.17.17-dispatcher, which may have incompatibilites with Kubernetes 1.20.2.
-    ▪ Want kubectl v1.20.2? Try 'minikube kubectl -- get pods -A'
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-
 ```
 
-#### In case of trouble
-If you have trouble starting minikube in this fashion (e.g. `⛔  Exiting due to RSRC_INSUFFICIENT_REQ_MEMORY`), try purging any pre-existing configs
-and re-try the start command.
+##### If you have trouble starting
 
-`minikube delete --all --purge`
-
-```
-🔥  Deleting "minikube" in virtualbox ...
-💀  Removed all traces of the "minikube" cluster.
-🔥  Successfully deleted all profiles
-💀  Successfully purged minikube directory located at - [/Users/xxx/.minikube]
-```
-
-Now, try to start again.
+Try running the [delete instructions](7-optional-delete-and-purge-configurations) and then
+re-try the start command.
 
 #### Post Startup
 After it's finished its startup, check status:
@@ -78,7 +65,7 @@ After it's finished its startup, check status:
 `minikube status`
 
 
-You should see something like this:
+You'll see something like this:
 ```
 minikube
 type: Control Plane
@@ -86,21 +73,25 @@ host: Running
 kubelet: Running
 apiserver: Running
 kubeconfig: Configured
-timeToStop: Nonexistent
 ```
 
 ### 4. Set `kubectl` context
 
 `kubectl config use-context minikube`
 
-After which you can verify:
+You'll see something like this:
+
+`Switched to context "minikube".`
+
+You can verify:
 
 `kubectl cluster-info`
 
-You should see something like this:
+You'll see something like this:
+
 ```
-Kubernetes master is running at https://192.168.99.108:8443
-KubeDNS is running at https://192.168.99.108:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Kubernetes control plane is running at https://127.0.0.1:61870
+CoreDNS is running at https://127.0.0.1:61870/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
@@ -113,12 +104,12 @@ You'll see something like this:
 
 ```
 🔌  Enabling dashboard ...
-    ▪ Using image kubernetesui/dashboard:v2.1.0
-    ▪ Using image kubernetesui/metrics-scraper:v1.0.4
+    ▪ Using image kubernetesui/dashboard:v2.6.0
+    ▪ Using image kubernetesui/metrics-scraper:v1.0.8
 🤔  Verifying dashboard health ...
 🚀  Launching proxy ...
 🤔  Verifying proxy health ...
-🎉  Opening http://127.0.0.1:58673/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+🎉  Opening http://127.0.0.1:62094/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
 ```
 
 And voila! Your browser will open that URL.
@@ -131,13 +122,11 @@ In this tutorial, we will build a docker image and deploy it using `kubernetes`.
 
 
 ### 1. Reuse the Docker daemon
-To speed things up locally, we'll use the Docker daemon in `minikube`
-to do our building.
+Let's point our SHELL to minikube's docker-daemon to do our building.
 
-`eval $(minikube docker-env)`
+`eval $(minikube -p minikube docker-env)`
 
-If you want to be sure it worked, try running `docker ps`. You'll see all
-the `k8s` containers running.
+If you want to be sure it worked, try running `docker ps`. You'll see all the `k8s` containers running in minikube.
 
 To unset the environment: `eval $(minikube docker-env -u)`
 
@@ -185,6 +174,34 @@ To unset the environment: `eval $(minikube docker-env -u)`
 
 This will open a browser window to your app. Open your `minikube dashboard` to
 have a look around!
+
+### 6. Shut it down
+
+`minikube stop`
+
+You'll see something like this:
+
+```
+✋  Stopping node "minikube"  ...
+🛑  Powering off "minikube" via SSH ...
+🛑  1 node stopped.
+```
+
+#### 7. (Optional) Delete and purge configurations
+
+`minikube delete --all --purge`
+
+You'll see something like this:
+
+```
+🔥  Deleting "minikube" in docker ...
+🔥  Removing /Users/User_Name/.minikube/machines/minikube ...
+💀  Removed all traces of the "minikube" cluster.
+🔥  Successfully deleted all profiles
+💀  Successfully purged minikube directory located at - [/Users/User_Name/.minikube]
+📌  Kicbase images have not been deleted. To delete images run:
+    ▪ docker rmi gcr.io/k8s-minikube/kicbase:v0.0.32
+```
 
 ## Resources
 * [Kubernetes 101](https://kubernetes.io/docs/tutorials/k8s101/)
