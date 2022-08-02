@@ -204,9 +204,5 @@ You'll see something like this:
 ```
 
 ## Resources
-* [Kubernetes 101](https://kubernetes.io/docs/tutorials/k8s101/)
-* [Kubernetes 201](https://kubernetes.io/docs/tutorials/k8s201/)
-
-### Playgrounds
-* [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
+* [Kubernetes Web Site](https://kubernetes.io/)
 * [Play with Kubernetes](https://labs.play-with-k8s.com/)
