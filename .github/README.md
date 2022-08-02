@@ -56,7 +56,7 @@ You'll see something like this:
 
 ##### If you have trouble starting
 
-Try running the [delete instructions](7-optional-delete-and-purge-configurations) and then
+Try running the [delete instructions](#7-optional-delete-and-purge-configurations) and then
 re-try the start command.
 
 #### Post Startup
