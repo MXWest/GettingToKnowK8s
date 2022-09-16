@@ -204,5 +204,6 @@ You'll see something like this:
 ```
 
 ## Resources
+* [`minikube`command reference](https://minikube.sigs.k8s.io/docs/commands/)
 * [Kubernetes Web Site](https://kubernetes.io/)
 * [Play with Kubernetes](https://labs.play-with-k8s.com/)
